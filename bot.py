@@ -33,5 +33,5 @@ reddit = praw.Reddit(
 
 subreddit = reddit.subreddit(getenv("W40KBOT_REDDIT_TARGET_SUBREDDIT"))
 top_new_post = list(subreddit.new(limit=1))[0]
-msg = f"/u/{top_new_post.author.name} praised the emperor!\n{top_new_post.title}\nhttps://reddit.com{top_new_post.permalink}"
+msg = f"/u/{top_new_post.author.name} praised the emperor!\n\nhttps://reddit.com{top_new_post.permalink}"
 tweepy_api.update_status(msg)
