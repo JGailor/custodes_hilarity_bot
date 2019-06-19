@@ -9,19 +9,21 @@ load_dotenv()
 def validate_configuration(prefix, vars):
     for env_var in vars:
         if getenv(f"{prefix}{env_var}") is None:
-            print(f"{prefix}{env_var} environment variable must be set.")
-            exit(-1)
+            raise Exception(f"{prefix}{env_var} environment variable must be set.")
 
-# Validate Twitter configuration information
-validate_configuration("W40KBOT_", ["CONSUMER_TOKEN", "CONSUMER_SECRET", "ACCESS_TOKEN", "ACCESS_TOKEN_SECRET"])
+reddit_pre = "W40KBOT_REDDIT_"
+
+# Validate configuration information
+try:
+    validate_configuration("W40KBOT_", ["CONSUMER_TOKEN", "CONSUMER_SECRET", "ACCESS_TOKEN", "ACCESS_TOKEN_SECRET"])
+    validate_configuration(reddit_pre, ["CLIENT_ID", "CLIENT_SECRET", "USERNAME", "PASSWORD", "TARGET_SUBREDDIT"])
+except Exception as e:
+    print(e)
+    exit(-1)
 
 tweepy_auth = tweepy.OAuthHandler(getenv("W40KBOT_CONSUMER_TOKEN"), getenv("W40KBOT_CONSUMER_SECRET"))
 tweepy_auth.set_access_token(getenv("W40KBOT_ACCESS_TOKEN"), getenv("W40KBOT_ACCESS_TOKEN_SECRET"))
 tweepy_api = tweepy.API(tweepy_auth)
-
-# Validate Reddit configuration information
-reddit_pre = "W40KBOT_REDDIT_"
-validate_configuration(reddit_pre, ["CLIENT_ID", "CLIENT_SECRET", "USERNAME", "PASSWORD", "TARGET_SUBREDDIT"])
 
 reddit = praw.Reddit(
     client_id=getenv("W40KBOT_REDDIT_CLIENT_ID"),
